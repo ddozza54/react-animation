@@ -1,6 +1,11 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
-import { motion, spring } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useMotionValueEvent,
+  useTransform,
+} from "framer-motion";
 import { start } from "repl";
 
 const Wrapper = styled.div`
@@ -37,20 +42,14 @@ const boxVariants = {
 };
 
 export default function App() {
-  const biggerBoxRef = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const potato = useTransform(x, [-800, 0, 800], [2, 1, 0]);
+  useMotionValueEvent(potato, "change", (l) => {
+    console.log(l);
+  });
   return (
     <Wrapper>
-      <BiggeerBox ref={biggerBoxRef}>
-        <Box
-          drag
-          dragElastic={0}
-          dragConstraints={biggerBoxRef}
-          variants={boxVariants}
-          whileHover="hover"
-          whileTap="click"
-          whileDrag="drag"
-        />
-      </BiggeerBox>
+      <Box style={{ x, scale: potato }} dragSnapToOrigin drag="x" />
     </Wrapper>
   );
 }
