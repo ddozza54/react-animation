@@ -23,49 +23,49 @@ const Box = styled(motion.div)`
   align-items: center;
   font-size: 28px;
 `;
-
-const showingVa = {
-  initial: {
-    opacity: 0,
-    scale: 0,
-    x: 500,
-  },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    x: 0,
-    transition: { duration: 1 },
-  },
-  leaving: {
-    opacity: 0,
-    x: -500,
-    transition: { duration: 1 },
-  },
-};
 export default function App() {
+  const box = {
+    entry: (isBack: boolean) => ({
+      x: isBack ? -500 : 500,
+      opacity: 0,
+      scale: 0,
+    }),
+    center: {
+      opacity: 1,
+      scale: 1,
+      x: 0,
+      transition: { duration: 0.3 },
+    },
+    leaving: (isBack: boolean) => ({
+      x: isBack ? 500 : -500,
+      opacity: 0,
+      transition: { duration: 0.3 },
+    }),
+  };
+
+  const [isBack, setIsBack] = useState(false);
   const [visible, setVisible] = useState(1);
   const nextPlease = () => {
+    setIsBack(false);
     setVisible((prev) => (prev === 8 ? 8 : prev + 1));
   };
   const prevPlease = () => {
+    setIsBack(true);
     setVisible((prev) => (prev === 1 ? 1 : prev - 1));
   };
   return (
     <Wrapper>
-      <AnimatePresence>
-        {[1, 2, 3, 4, 5, 6, 7, 8].map((i) =>
-          i === visible ? (
-            <Box
-              variants={showingVa}
-              initial="initial"
-              animate="visible"
-              exit="leaving"
-              key={i}
-            >
-              {i}
-            </Box>
-          ) : null
-        )}
+      <AnimatePresence mode="wait" custom={isBack}>
+        <Box
+          custom={isBack}
+          variants={box}
+          initial="entry"
+          animate="center"
+          exit="leaving"
+          key={visible}
+        >
+          {visible}
+        </Box>
       </AnimatePresence>
       <button onClick={prevPlease}>Prev</button>
       <button onClick={nextPlease}>Next</button>
