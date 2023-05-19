@@ -70,18 +70,16 @@ export default function App() {
       scale: 1.2,
     }),
   };
-  console.log(id);
   return (
-    <Wapper>
-      <AnimatePresence custom={id}>
+    <AnimatePresence custom={id}>
+      <Wapper>
         <Grid>
-          {["1", "2"].map((i: any) => (
+          {["1", "4"].map((i: any) => (
             <Box
+              key={i}
               layoutId={i}
-              onClick={() => {
-                setId(i);
-              }}
-              transition={{ type: "tween", duration: 0.2 }}
+              onClick={() => setId(i)}
+              transition={{ type: "tween", duration: 0.3 }}
               variants={scaleDirection}
               custom={i}
               whileHover="animate"
@@ -100,27 +98,27 @@ export default function App() {
         >
           Switch
         </SwtichBtn>
-
-        {id ? (
-          <Overlay
-            onClick={() => {
-              setId(null);
-            }}
-            initial={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
-            animate={{ backgroundColor: "rgba(0, 0, 0, 0.8)" }}
-            exit={{ backgroundColor: "rgba(0, 0, 0, 0.8)" }}
-          >
-            <Box
-              layoutId={id}
-              style={{
-                backgroundColor: "white",
-                width: "300px",
-                height: "200px",
-              }}
-            />
-          </Overlay>
-        ) : null}
-      </AnimatePresence>
-    </Wapper>
+        <AnimatePresence>
+          {id ? (
+            <Overlay
+              onClick={() => setId(null)}
+              initial={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
+              animate={{ backgroundColor: "rgba(0, 0, 0, 0.8)" }}
+              exit={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
+            >
+              <Box
+                key={id}
+                layoutId={id}
+                style={{
+                  backgroundColor: "white",
+                  width: "300px",
+                  height: "200px",
+                }}
+              />
+            </Overlay>
+          ) : null}
+        </AnimatePresence>
+      </Wapper>
+    </AnimatePresence>
   );
 }
