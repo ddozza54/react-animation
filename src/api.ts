@@ -25,3 +25,11 @@ export function getMovies() {
     (response) => response.json()
   );
 }
+
+export function getSearchMovies(keyword: string) {
+  console.log("keyword", keyword);
+
+  return fetch(
+    `${BASE_PATH}/search/movie?api_key=${API_KEY}&query=${keyword}&include_adult=false&language=en-US&page=1`
+  ).then((response) => response.json());
+}

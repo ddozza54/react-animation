@@ -15,7 +15,7 @@ import { isAbsolute } from "path";
 const Wrapper = styled.div`
   background: black;
   padding-bottom: 200px;
-  height: 500vh;
+  height: 300vh;
 `;
 
 const Loader = styled.div`
