@@ -5,8 +5,6 @@ import Tv from "./Routes/Tv";
 import Search from "./Routes/Search";
 import Header from "./Components/Header";
 
-
-
 export default function App() {
   return (
     <div>
@@ -19,7 +17,7 @@ export default function App() {
           <Route path="/search">
             <Search />
           </Route>
-          <Route path="/">
+          <Route path={["/", "/movie/:movieId"]}>
             <Home />
           </Route>
         </Switch>
