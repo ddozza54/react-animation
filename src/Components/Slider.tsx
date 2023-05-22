@@ -1,10 +1,9 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
 import { makeImagePath } from "../utils";
-import { IGetMoviesResult, IMovie, getMovies } from "../api";
-import { useQuery } from "react-query";
+import { IGetMoviesResult } from "../api";
 
 const SliderBox = styled(motion.div)`
   height: 300px;
@@ -115,6 +114,7 @@ export default function Slider({ sliderTitle, data }: Islider) {
   const onBoxClicked = (movieId: number) => {
     history.push(`/movies/${movieId}`);
   };
+
   const incraseIndex = () => {
     if (data) {
       setIsNextBtn(true);
@@ -138,7 +138,7 @@ export default function Slider({ sliderTitle, data }: Islider) {
   return (
     <>
       <SliderBox>
-        <SliderTitle>{sliderTitle.sliderTitle}</SliderTitle>
+        <SliderTitle>{sliderTitle}</SliderTitle>
         <SliderBtn
           onClick={decreseIndex}
           style={{ top: 100, left: 3 }}
@@ -188,6 +188,7 @@ export default function Slider({ sliderTitle, data }: Islider) {
           </Row>
         </AnimatePresence>
       </SliderBox>
+      
     </>
   );
 }

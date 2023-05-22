@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { useQuery } from "react-query";
+import { useQueries, useQuery } from "react-query";
 import {
   IGetMoviesResult,
-  getLatestMovies,
   getMovies,
+  getPopularMovies,
   getTopMovies,
   upcomingMovies,
 } from "../api";
@@ -106,51 +106,61 @@ const Sliders = styled.div`
 export default function Home() {
   const history = useHistory();
   const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
-  const nowPlaying = useQuery<IGetMoviesResult>(
-    ["movies", "nowPlaying"],
-    getMovies
-  );
-  const latestMovieData = useQuery<IGetMoviesResult>(
-    ["movies", "latest"],
-    getLatestMovies
-  );
-  const topMovies = useQuery<IGetMoviesResult>(
-    ["movies", "topRated"],
-    getTopMovies
-  );
-  const upcomingMovie = useQuery<IGetMoviesResult>(
-    ["movies", "topRated"],
-    upcomingMovies
-  );
+
+  const [
+    { data: nowPlayingData, isLoading: isLoadingNow },
+    { data: popularMovieData, isLoading: isLoagingPopular },
+    { data: topMoviesData, isLoading: isLoagingTop },
+    { data: upcomingMovie, isLoading: isLoagingUpcoming },
+  ] = useQueries([
+    { queryKey: ["nowPlaying", 1], queryFn: getMovies },
+    { queryKey: ["latest", 2], queryFn: getPopularMovies },
+    { queryKey: ["topRated", 3], queryFn: getTopMovies },
+    { queryKey: ["upcoming", 4], queryFn: upcomingMovies },
+  ]);
 
   const onOverlayClick = () => history.push("/");
   const { scrollY } = useScroll();
   const setScrollY = useTransform(scrollY, (vlaue) => vlaue + 100);
+  
+  //params 에 있는 Id 가 data 에 있는지 확인해야함.
+  //일치하는 첫번째 데이터
   const clickedMovie =
     bigMovieMatch?.params.movieId &&
-    nowPlaying.data?.results.find(
-      (movie) => movie.id === +bigMovieMatch.params.movieId
+    nowPlayingData?.results.find(
+      (movie: any) => movie.id === +bigMovieMatch.params.movieId
     );
+
   return (
     <Wrapper>
-      {nowPlaying.isLoading ? (
+      {isLoadingNow ? (
         <Loader>Loading...</Loader>
       ) : (
         <div style={{ position: "relative" }}>
           <Banner
             bgPhoto={makeImagePath(
-              nowPlaying.data?.results[0].backdrop_path || ""
+              nowPlayingData?.results[0].backdrop_path || ""
             )}
           >
-            <Title>{nowPlaying.data?.results[0].title}</Title>
-            <Overview>{nowPlaying.data?.results[0].overview}</Overview>
+            <Title>{nowPlayingData?.results[0].title}</Title>
+            <Overview>{nowPlayingData?.results[0].overview}</Overview>
           </Banner>
 
           <Sliders>
-            <Slider sliderTitle="Now Playing" data={nowPlaying} />
-            <Slider sliderTitle="Latest movies" data={latestMovieData} />
-            <Slider sliderTitle="Top Rated Movies" data={topMovies} />
-            <Slider sliderTitle="Upcoming Movies" data={upcomingMovie} />
+            {nowPlayingData && (
+              <Slider sliderTitle="Now Playing" data={nowPlayingData} />
+            )}
+
+            {popularMovieData && (
+              <Slider sliderTitle="Latest movies" data={popularMovieData} />
+            )}
+
+            {topMoviesData && (
+              <Slider sliderTitle="Top Rated Movies" data={topMoviesData} />
+            )}
+            {upcomingMovie && (
+              <Slider sliderTitle="Upcoming Movies" data={upcomingMovie} />
+            )}
           </Sliders>
 
           <AnimatePresence>
