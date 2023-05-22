@@ -1,7 +1,7 @@
 const API_KEY = "14dea7da566e33badd6e7eacd4c721b4";
 const BASE_PATH = "https://api.themoviedb.org/3";
 
-interface IMovie {
+export interface IMovie {
   id: number;
   backdrop_path: string;
   poster_path: string;
@@ -26,9 +26,26 @@ export function getMovies() {
   );
 }
 
-export function getSearchMovies(keyword: string) {
-  console.log("keyword", keyword);
+export function getLatestMovies() {
+  return fetch(`${BASE_PATH}/movie/latest?api_key=${API_KEY}`).then(
+    (response) => response.json()
+  );
+}
 
+export function getTopMovies() {
+  return fetch(`${BASE_PATH}/movie/top_rated?api_key=${API_KEY}`).then(
+    (response) => response.json()
+  );
+}
+
+export function upcomingMovies() {
+  return fetch(`${BASE_PATH}/movie/upcoming?api_key=${API_KEY}`).then(
+    (response) => response.json()
+  );
+}
+
+//keyword 어떻게 넣지?
+export function getSearchMovies(keyword: string) {
   return fetch(
     `${BASE_PATH}/search/movie?api_key=${API_KEY}&query=${keyword}&include_adult=false&language=en-US&page=1`
   ).then((response) => response.json());
