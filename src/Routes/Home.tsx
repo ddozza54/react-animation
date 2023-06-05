@@ -15,7 +15,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { makeImagePath } from "../utils";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useNavigate, useRouteMatch } from "react-router-dom";
 import Slider from "../Components/Slider";
 import { relative } from "path";
 
@@ -104,8 +104,10 @@ const Sliders = styled.div`
 `;
 
 export default function Home() {
-  const history = useHistory();
-  const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
+  const history = useNavigate();
+  const bigMovieMatch = useRouteMatch<{ movieId: string }>(
+    "/movies/:sliderName/:movieId"
+  );
 
   const [
     { data: nowPlayingData, isLoading: isLoadingNow },
@@ -122,11 +124,13 @@ export default function Home() {
   const onOverlayClick = () => history.push("/");
   const { scrollY } = useScroll();
   const setScrollY = useTransform(scrollY, (vlaue) => vlaue + 100);
-  
+
   //params 에 있는 Id 가 data 에 있는지 확인해야함.
   //일치하는 첫번째 데이터
-  const clickedMovie =
-    bigMovieMatch?.params.movieId &&
+  //  istory.push(`/movies/${sliderName}/${movieId}
+
+  const clickedMovie = () => {};
+  bigMovieMatch?.params.movieId &&
     nowPlayingData?.results.find(
       (movie: any) => movie.id === +bigMovieMatch.params.movieId
     );
@@ -148,18 +152,32 @@ export default function Home() {
 
           <Sliders>
             {nowPlayingData && (
-              <Slider sliderTitle="Now Playing" data={nowPlayingData} />
+              <Slider
+                sliderTitle="Now Playing"
+                sliderName="nowplaying"
+                data={nowPlayingData}
+              />
             )}
-
             {popularMovieData && (
-              <Slider sliderTitle="Latest movies" data={popularMovieData} />
+              <Slider
+                sliderTitle="Latest movies"
+                sliderName="lastest"
+                data={popularMovieData}
+              />
             )}
-
             {topMoviesData && (
-              <Slider sliderTitle="Top Rated Movies" data={topMoviesData} />
+              <Slider
+                sliderTitle="Top Rated Movies"
+                sliderName="toprated"
+                data={topMoviesData}
+              />
             )}
             {upcomingMovie && (
-              <Slider sliderTitle="Upcoming Movies" data={upcomingMovie} />
+              <Slider
+                sliderTitle="Upcoming Movies"
+                sliderName="upcoming"
+                data={upcomingMovie}
+              />
             )}
           </Sliders>
 
@@ -175,7 +193,7 @@ export default function Home() {
                   style={{ top: setScrollY }}
                   layoutId={bigMovieMatch.params.movieId}
                 >
-                  {clickedMovie && (
+                  {/* {clickedMovie && (
                     <>
                       <BigCover
                         style={{
@@ -188,7 +206,7 @@ export default function Home() {
                       <BigTitle>{clickedMovie.title}</BigTitle>
                       <BigOverview>{clickedMovie.overview}</BigOverview>
                     </>
-                  )}
+                  )} */}
                 </BigMovie>
               </>
             ) : null}

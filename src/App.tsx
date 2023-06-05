@@ -1,5 +1,5 @@
 import { AnimatePresence, animate, motion } from "framer-motion";
-import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Home from "./Routes/Home";
 import Tv from "./Routes/Tv";
 import Search from "./Routes/Search";
@@ -10,17 +10,11 @@ export default function App() {
     <div>
       <Router>
         <Header />
-        <Switch>
-          <Route path="/tv">
-            <Tv />
-          </Route>
-          <Route path="/search">
-            <Search />
-          </Route>
-          <Route path={["/", "/movie/:movieId"]}>
-            <Home />
-          </Route>
-        </Switch>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/tv" element={<Tv />} />
+          <Route path="/search" element={<Search />} />
+        </Routes>
       </Router>
     </div>
   );

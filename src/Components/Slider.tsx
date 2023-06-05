@@ -100,19 +100,20 @@ const rowVariants = {
 
 interface Islider {
   sliderTitle: string;
+  sliderName: string;
   data: IGetMoviesResult;
 }
 
 const offset = 6;
 
-export default function Slider({ sliderTitle, data }: Islider) {
+export default function Slider({ sliderTitle, sliderName, data }: Islider) {
   const history = useHistory();
   const [isNextBtn, setIsNextBtn] = useState(true);
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const toggleLeaving = () => setLeaving((prev) => !prev);
   const onBoxClicked = (movieId: number) => {
-    history.push(`/movies/${movieId}`);
+    history.push(`/movies/${sliderName}/${movieId}`);
   };
 
   const incraseIndex = () => {
@@ -188,7 +189,6 @@ export default function Slider({ sliderTitle, data }: Islider) {
           </Row>
         </AnimatePresence>
       </SliderBox>
-      
     </>
   );
 }
