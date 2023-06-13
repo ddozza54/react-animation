@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useNavigate, useMatch } from "react-router-dom";
 import styled from "styled-components";
 import { makeImagePath } from "../utils";
 import { IGetMoviesResult } from "../api";
@@ -107,13 +107,13 @@ interface Islider {
 const offset = 6;
 
 export default function Slider({ sliderTitle, sliderName, data }: Islider) {
-  const history = useHistory();
+  const history = useNavigate();
   const [isNextBtn, setIsNextBtn] = useState(true);
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const toggleLeaving = () => setLeaving((prev) => !prev);
   const onBoxClicked = (movieId: number) => {
-    history.push(`/movies/${sliderName}/${movieId}`);
+    // history.push(`/movies/${sliderName}/${movieId}`);
   };
 
   const incraseIndex = () => {
@@ -165,7 +165,7 @@ export default function Slider({ sliderTitle, sliderName, data }: Islider) {
             initial="hidden"
             animate="visible"
             exit="exit"
-            transition={{ type: "tween", duration: "1", delay: 0.3 }}
+            transition={{ type: "tween", duration: 1, delay: 0.3 }}
             custom={isNextBtn}
           >
             {data?.results

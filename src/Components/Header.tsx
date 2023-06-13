@@ -5,8 +5,7 @@ import {
   useMotionValueEvent,
   useScroll,
 } from "framer-motion";
-import { Link, useHistory } from "react-router-dom";
-import { useRouteMatch } from "react-router";
+import { Link, useNavigate, useMatch, PathMatch } from "react-router-dom";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -114,8 +113,8 @@ interface IForm {
 
 export default function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
-  const homeMatch = useRouteMatch("/");
-  const tvMatch = useRouteMatch("/tv");
+  const homeMatch: PathMatch<string> | null = useMatch("/");
+  const tvMatch = useMatch("/tv");
   const inputAnimation = useAnimation();
   const navAnimation = useAnimation();
   const { scrollY } = useScroll();
@@ -138,9 +137,9 @@ export default function Header() {
   });
 
   const { register, handleSubmit } = useForm<IForm>();
-  const history = useHistory();
+  const history = useNavigate();
   const onValid = (data: IForm) => {
-    history.push(`/search/keyword=${data.keyword}`);
+    // history.push(`/search/keyword=${data.keyword}`);
   };
 
   return (
@@ -164,7 +163,7 @@ export default function Header() {
         <Items>
           <Item>
             <Link to="/">Home</Link>
-            {homeMatch?.isExact && <Circle layoutId="circle" />}
+            {homeMatch && <Circle layoutId="circle" />}
           </Item>
           <Item>
             <Link to="/tv"> Tv Shows </Link>

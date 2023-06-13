@@ -15,7 +15,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { makeImagePath } from "../utils";
-import { useNavigate, useRouteMatch } from "react-router-dom";
+import { useNavigate, useMatch, PathMatch } from "react-router-dom";
 import Slider from "../Components/Slider";
 import { relative } from "path";
 
@@ -104,10 +104,8 @@ const Sliders = styled.div`
 `;
 
 export default function Home() {
-  const history = useNavigate();
-  const bigMovieMatch = useRouteMatch<{ movieId: string }>(
-    "/movies/:sliderName/:movieId"
-  );
+  const navigate = useNavigate();
+  const moviePathMatch: PathMatch<string> | null = useMatch("/movies/:movieId");
 
   const [
     { data: nowPlayingData, isLoading: isLoadingNow },
@@ -121,7 +119,7 @@ export default function Home() {
     { queryKey: ["upcoming", 4], queryFn: upcomingMovies },
   ]);
 
-  const onOverlayClick = () => history.push("/");
+  const onOverlayClick = () => {};
   const { scrollY } = useScroll();
   const setScrollY = useTransform(scrollY, (vlaue) => vlaue + 100);
 
@@ -130,9 +128,9 @@ export default function Home() {
   //  istory.push(`/movies/${sliderName}/${movieId}
 
   const clickedMovie = () => {};
-  bigMovieMatch?.params.movieId &&
+  moviePathMatch?.params.movieId &&
     nowPlayingData?.results.find(
-      (movie: any) => movie.id === +bigMovieMatch.params.movieId
+      (movie: any) => movie.id === +moviePathMatch.params
     );
 
   return (
@@ -182,7 +180,7 @@ export default function Home() {
           </Sliders>
 
           <AnimatePresence>
-            {bigMovieMatch ? (
+            {moviePathMatch ? (
               <>
                 <Overlay
                   animate={{ opacity: 0.8 }}
@@ -191,7 +189,7 @@ export default function Home() {
                 />
                 <BigMovie
                   style={{ top: setScrollY }}
-                  layoutId={bigMovieMatch.params.movieId}
+                  layoutId={moviePathMatch.params.movieId}
                 >
                   {/* {clickedMovie && (
                     <>
